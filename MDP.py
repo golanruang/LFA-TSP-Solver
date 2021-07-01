@@ -12,7 +12,7 @@ class MDP(numStates, numActions, gamma):
     self.numSteps = 100
     self.theta = -1
     self.phi = -1
-    self.w = -1
+    self.w = -1 # linear approximation to q function - in order to update policy, you use q function
     self.stepsize = 1
 
     def ACFunction(self):
@@ -45,7 +45,7 @@ class MDP(numStates, numActions, gamma):
     def updateTheta(self, update):
         self.theta = self.theta+update
 
-    def gradientG(self):
+    def gradientG(self, s, a):
         return -2*phi(s,a) * (q(s,a) - w(s,a))
 
     def findQ(self):
@@ -76,14 +76,8 @@ class MDP(numStates, numActions, gamma):
             vector+=diff
         return vector 
 
-    def calculateExpectation(self, array):
+    def getExpectation(self, array):
         return np.mean(array)
-
-    def getExpectation(self, s, a):
-        return 
-
-    def oneTimestep(self,a):
-        pass
 
 m = MDP(3,3,0.9)
 
