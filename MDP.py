@@ -34,8 +34,7 @@ class MDP(numStates, numActions, gamma):
         # wt argmin(E[Q(s,a)-w*phi(s,a)])
 
         for i in range(k):
-            w = w - self.stepsize * argmin(g(w))
-        pass 
+            w = w - self.stepsize * argmin(g(w)) 
 
     def g(self, Q, w, phi, s, a):
         return (Q(s,a, self.policy) - w*phi(s,a))**2
