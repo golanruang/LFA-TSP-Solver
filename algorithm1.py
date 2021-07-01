@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import sympy
 
 class MDP(numStates, numActions, gamma):
     self.state = -1 # define number of states --> 
@@ -33,30 +34,29 @@ class MDP(numStates, numActions, gamma):
         # wt argmin(E[Q(s,a)-w*phi(s,a)])
 
         for i in range(k):
-            w = w - self.stepsize * argmin(w)
+            w = w - self.stepsize * argmin(g(w))
         pass 
+
+    def g(self, Q, w, phi, s, a):
+        return (Q(s,a, self.policy) - w*phi(s,a))**2
+
+    def phi(s,a):
+        pass
 
     def updateTheta(self, update):
         self.theta = self.theta+update
 
-    def findG(self):
-        pass 
+    def gradientG(self):
+        return -2*phi(s,a) * (q(s,a) - w(s,a))
 
     def findQ(self):
         # use stochiastic gradient descent to estimate the q function
+
         pass
     def argmin(self):
         # run gradient descent given a list of numbers
-        w = w-b(delta)G()
-        
-    def getReward(self):
-        pass
-
-    def getState(self):
-        pass
-
-    def getAction(self):
-        pass
+        # w = w-b(delta)G() 
+        pass 
 
     def terminate(self):
         roll = random.random()
@@ -66,6 +66,16 @@ class MDP(numStates, numActions, gamma):
 
     def incrementTime(self):
         self.timestep += 1
+
+    def gradient_descent(self, gradient, start, learn_rate, n_iter):
+        gradient, start, learn_rate, n_iter = 50, tolerance = 1e-06
+        vector = start
+        for _ in range(n_iter):
+            diff = -learn_rate*gradient(vector)
+            if np.all(np.abs(diff) <= tolerance):
+                return
+            vector+=diff
+        return vector 
 
     def calculateExpectation(self, array):
         return np.mean(array)
