@@ -1,5 +1,8 @@
 from random import randint
 import random
+
+import numpy as np
+from scipy.special import softmax
 """
 first generate locations of cities
 then calculate all permutations
@@ -10,46 +13,30 @@ Based on the way you choose phis the algorithm will behave differently
 Find the best arrangement of phis 
 """
 
-def step():
-    pass
-
-def calculatePermutations():
-    pass
-
-def placeCities(grid,cities):
-    h = len(grid)
-    w = len(grid[0])
-    numWs=0
-    remainder=0
+class TSP:
+    def __init__(self, d):
+        self.d = d
+        pass 
     
+    def sampleTour(self):
+        pass
+
+    def createCities(self):
+        pass
     
+    def phi(self, history, s, nextCity):
+        """
+        history = vector of past cities
+        """
+        
+        pass 
 
-def createCities(grid,numCities):
-    h = len(grid)
-    w = len(grid[0])
-    total = h*w 
-    cities = []
-    while len(cities) < 3:
-        city = random.randrange(1,total)
-        if city not in cities: 
-            cities.append(city)
+    def findPermutations(self):
+        permutations = []
+        return permutations
 
-    return cities 
-
-def displayEnv(grid):
-    for row in range(len(grid)):
-        print([0] * len(grid[0]))
-
+    def 
 def main():
-    numCities = 4 
-    h = 7 
-    w = 5 
-    grid = [[0 for _ in range(w)] for i in range(h)]
-
-    displayEnv(grid)
-
-    cities = createCities(grid,numCities)
-    print(cities)
-    grid = placeCities(grid,cities)
+    numCities = 5
 
 main()
