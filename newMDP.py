@@ -26,7 +26,7 @@ class MDP:
         action = self.env.action_space.sample()
         # print(observation)
         while self.termination()==False: 
-            # self.env.render()
+            self.env.render()
             policy = self.getPolicy(observation, action)
             # print(policy)
             # action = self.env.action_space.sample()
