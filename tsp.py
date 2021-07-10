@@ -129,9 +129,13 @@ def main():
     cities = {"0":(0.2,0.2), "1":(0.7,0.4), "2":(0,1,0.6), "3":(0.9,0.9), "4": (0.5,0.4), "5": (0.4,0.3), "6": (0.3,0.2)}
     history = ["0"]
     t = TSP(5, cities) # num cities, stepsize, 
-    for i in range(numCities-1):
-        # t.getNextCity([1,3])
-        history.append(t.getNextCity(history))
-    history.append("0")
-    print(history)
+    tourNum = 1
+    for i in range(10):
+        for i in range(numCities-1):
+            # t.getNextCity([1,3])
+            history.append(t.getNextCity(history))
+        history.append("0")
+        print("tour num %d: " % tourNum + str(history))
+        history = ["0"]
+        tourNum+=1
 main()
