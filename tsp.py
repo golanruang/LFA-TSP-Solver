@@ -5,6 +5,8 @@ import math
 import numpy as np
 from scipy.special import softmax
 
+from turtle import *
+
 """
 first generate locations of cities
 then calculate all permutations
@@ -30,7 +32,7 @@ class TSP:
         self.numCities = numCities
         self.cities = self.createCities()
         self.currCity = "0"
-        self.theta
+        self.theta = [random.Random()] * 8
 
     def createCities(self):
         cities = {}
@@ -99,6 +101,9 @@ class TSP:
         # print("available cities: ", availableCities)
         return availableCities
 
+    def getCities(self):
+        return self.cities
+
     def phi(self, history):
         """
         history = vector of past cities 
@@ -127,33 +132,55 @@ class TSP:
     def distance(self, p0, p1):
         return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
 
+    def getTheta(self):
+        return self.theta
+
+    def setTheta(self,theta):
+        self.theta = theta
+    
     def loss(self, history):
         loss = 0
-        print("history: ", history)
         for i in range(len(history)-1):
             city1 = history[i]
             city2 = history[i+1]
             dist = self.distance(self.cities[city1], self.cities[city2])
             loss += dist
-        print(loss)
         return loss
 
 def plot(path, cities):
     path = [0,5,4,3,2,6,0]
+    wn = turtle.Screen()
+    wn.bgcolor("")
+    wn.title("Travelling Salesman Problem")
     
+def findGradient():
+    
+    pass 
+
 def main():
-    numCities = 15
+    numCities = 10
     #  = {"0":(0.2,0.2), "1":(0.7,0.4), "2":(0,1,0.6), "3":(0.9,0.9), "4": (0.5,0.4), "5": (0.4,0.3), "6": (0.3,0.2)}
     # history = ["0","6","3","4","1","2","0"]
+    history = ["0"]
+    loss = 0
     t = TSP(numCities) # num cities, stepsize, 
-    # tourNum = 1
-    # for i in range(10):
-    #     for i in range(numCities-1): # sample a tour
-    #         # t.getNextCity([1,3])
-    #         history.append(t.getNextCity(history))
-    #         
-    #     history.append("0")
-    #     print("tour num %d: " % tourNum + str(history))
-    #     history = ["0"]
-    #     tourNum+=1
+    tourNum = 1
+    gradient = 0
+    for i in range(numCities):
+        for i in range(numCities-1): # sample a tour
+            history.append(t.getNextCity(history))
+        history.append("0")
+        print("tour num %d: " % tourNum + str(history))
+        loss = t.loss(history)
+        print("loss: ", loss)
+
+
+
+
+
+
+
+
+        history = ["0"]
+        tourNum+=1
 main()
