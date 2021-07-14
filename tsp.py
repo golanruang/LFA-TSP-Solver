@@ -5,7 +5,7 @@ import math
 import numpy as np
 from scipy.special import softmax
 
-from turtle import *
+import turtle
 
 """
 first generate locations of cities
@@ -32,7 +32,7 @@ class TSP:
         self.numCities = numCities
         self.cities = self.createCities()
         self.currCity = "0"
-        self.theta = [random.Random()] * 8
+        self.theta = [random.Random()] * numCities
 
     def createCities(self):
         cities = {}
@@ -45,7 +45,7 @@ class TSP:
                 cityNum += 1
             else:
                 xcoord = random.random()
-        print(cities)
+
         return cities
         
     
@@ -53,7 +53,13 @@ class TSP:
         pass
 
     def getNextCity(self, history):
-        return self.sampleNextCity(self.softmaxCities(self.phi(history)),history)
+        print("history: ", history)
+        phi = self.phi(history)
+        softmaxed = self.softmaxCities(phi)
+        nextCity = self.sampleNextCity(softmaxed, history)
+        self.currCity = str(nextCity)
+        print("next city: ", str(nextCity))
+        return nextCity
 
     def softmaxCities(self, phi):
         """
@@ -61,38 +67,42 @@ class TSP:
         returns new phi list with an extra softmax val at the end
         phi = distance, current city (int), potential next city (int), previous city (int), softmax val
         """
-        toSoftmax = []
-        for element in phi: 
-            toSoftmax.append(element[0])
-        softmaxed = softmax(toSoftmax)
-
+        # toSoftmax = []
+        # for element in phi: 
+        #     toSoftmax.append(element[0])
+        notzero = []
+        for val in phi:
+            if val != 0:
+                notzero.append(val)
+        softmaxed = softmax(notzero)
+        print("softmaxed: ", softmaxed)
+        P = []
+        index = 0
         for i in range(len(phi)):
-            phi[i].append(softmaxed[i])
-        return phi
+            if phi[i] == 0:
+                P.append(0)
+            else: 
+                P.append(softmaxed[index])
+                index+=1
+        print("P: ", P)
+        return P
 
     def sampleNextCity(self, softmaxCities, history):
         """
         given softmaxes of potential next cities sample a new city and return it's index (int)
         """
-
-        softmaxOnly = []
-        for city in softmaxCities:
-            softmaxOnly.append(city[-1])
-        s = np.random.choice(softmaxOnly)
-        index = -1
-        # ("softmax only: ", softmaxOnly)
-        for i in range(len(softmaxCities)): # don't use this list
-            if softmaxCities[i][-1]==s:
-                index=i
-
-        nextCity = softmaxCities[index][2]
+        print("softmax cities in sampleNextCity: ", softmaxCities)
+        print(self.cities.keys())
+        s = np.random.choice(range(self.numCities), p=softmaxCities)
+        nextCity = s
         
         return nextCity
 
+    """
     def getAvailableCities(self, history):
-        """
+        
         given history of past cities visited return a list of cities that have not been visited (does not include current city)
-        """
+        
         availableCities = []
         for city in self.cities.keys():
             if city not in history and city != self.currCity:
@@ -100,6 +110,7 @@ class TSP:
         # print("history: ", history)
         # print("available cities: ", availableCities)
         return availableCities
+    """
 
     def getCities(self):
         return self.cities
@@ -108,26 +119,29 @@ class TSP:
         """
         history = vector of past cities 
         currentCity = int (current city)
+
+        keep dimension returned by phi constant (num cities dimensional) - just set phi as 0 if in history
         
         returns a list of lists phi with four elements in each sublist: distance, current city (int), potential next city (int), and previous city (int)
         """
-        phi = []
-        availableCities = self.getAvailableCities(history)
-        for i in range(len(availableCities)):
-            currentCity = self.cities[str(self.currCity)]
-            nextCity = self.cities[str(availableCities[i])]
-            if len(history)==0:
-                prevCity = currentCity
-            else: 
-                prevCity = self.cities[str(history[-1])]
-            dist1 = self.distance(currentCity, prevCity)
-            dist2 = self.distance(currentCity, nextCity)
-            if len(history)==0:
-                phi.append([dist1+dist2, self.currCity,
-                            availableCities[i], 0])
-            else: 
-                phi.append([dist1+dist2, self.currCity, availableCities[i], history[-1]])
-        return phi
+        phis = []
+        for i in range(self.numCities):
+            if str(i) in history:
+                phis.append(0)
+            else:
+                currentCity = self.cities[str(self.currCity)]
+                nextCity = self.cities[str(i)]
+                if len(history) == 0:
+                    prevCity = currentCity
+                else:
+                    # print(str(history[-1]))
+                    prevCity = self.cities[str(history[-1])]
+                dist1 = self.distance(currentCity, prevCity)
+                dist2 = self.distance(currentCity, nextCity)
+                # print(dist1+dist2)
+                phis.append(dist1+dist2)  
+        # print("phis: ", phis)
+        return phis
 
     def distance(self, p0, p1):
         return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
@@ -153,9 +167,24 @@ def plot(path, cities):
     wn.bgcolor("")
     wn.title("Travelling Salesman Problem")
     
-def findGradient():
-    
-    pass 
+def findGradient(tours, t):
+    tempHist = ["0"]
+    gradient = 0
+    for tour in tours:
+        gradient = t.loss(tour)
+        print("tour: ", tour)
+        for city in range(len(tour)-1):
+            currentCity = tour[int(city)]
+            nextCity = tour[int(city)+1]
+            phis = t.phi(tempHist)
+            if str(city) not in tempHist: 
+                sub = t.softmaxCities(phis[int(city)])
+
+
+            tempHist.append(city)
+
+
+
 
 def main():
     numCities = 10
@@ -166,21 +195,17 @@ def main():
     t = TSP(numCities) # num cities, stepsize, 
     tourNum = 1
     gradient = 0
-    for i in range(numCities):
+    n = 10
+    tours = []
+    for i in range(n): # sample n tours
         for i in range(numCities-1): # sample a tour
-            history.append(t.getNextCity(history))
+            history.append(str(t.getNextCity(history)))
         history.append("0")
         print("tour num %d: " % tourNum + str(history))
-        loss = t.loss(history)
         print("loss: ", loss)
-
-
-
-
-
-
-
-
+        tours.append(history)
         history = ["0"]
         tourNum+=1
+    # print(tours)
+    gradient = findGradient(tours, t)
 main()
