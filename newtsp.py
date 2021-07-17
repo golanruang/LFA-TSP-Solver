@@ -5,6 +5,7 @@ import math
 import numpy as np
 from scipy.special import softmax
 
+import matplotlib.pyplot as plt
 import turtle
 
 class TSP:
@@ -12,7 +13,7 @@ class TSP:
     def __init__(self, numCities, stepsize, dimensions, N):
 
         self.numCities = numCities
-        self.theta = np.array([-46.72873714, -45.17169947, -46.23876978, -46.15519802, -46.72596762, -46.88840334, -46.82864713, -46.91883274, -46.86716481, -47.15116365])
+        self.theta = np.zeros(numCities)
         self.s = self.generateS(numCities)  # should not define an s
         self.stepsize = stepsize
         self.dimensions = dimensions # area that you are sampling from
@@ -194,9 +195,10 @@ def logP(t, tour, s):
 
 def bigTerm(t, tour, s):
     loss = t.loss(tour, s)
+    print("loss: %f" % loss)
     log_gradient_P = logP(t, tour, s)
 
-    return np.multiply(loss, log_gradient_P)
+    return np.multiply(loss, log_gradient_P), loss
 
 def updateGradient(t, gradient, tours, N, numCities):
     """
@@ -209,24 +211,35 @@ def updateGradient(t, gradient, tours, N, numCities):
     print("calculating gradient...")
     gradient = np.zeros(numCities)
     history = ["0"]
+    losses=[]
 
     for i in range(N):
         s=t.generateS(numCities)
         tour = sampleTour(history, s, t)
-        print("tour: %s" % tour)
-        term = bigTerm(t, tour, s)
-        print("big term: %s" % term)
+        #print("tour: %s" % tour)
+        term, loss = bigTerm(t, tour, s)
+        #print("big term: %s" % term)
         gradient=np.add(gradient,term)
+        gradient=gradient/N
+        losses.append(loss)
+        t.updateTheta(gradient)
         history=["0"]
-    
-    return gradient
+
+    print("theta: ", t.getTheta())
+    return losses
+
+def plotLoss(losses, numCities):
+    x = range(len(losses))
+    y = losses
+    plt.scatter(x,y)
+    plt.xlabel("iter # for %d cities" % numCities)
+    plt.ylabel("loss")
+    plt.show()
 
 def main():
-    """
-    When am i supposed to change the s?
-    """
-    N = 500
-    numCities = 10
+
+    N = 10
+    numCities = 50
     stepsize = 1
     dimensions = (2,2)
     t = TSP(numCities, stepsize, dimensions, N)
@@ -235,9 +248,7 @@ def main():
     gradient = np.zeros(numCities)
     tours = []
 
-    delta=updateGradient(t, gradient, tours, N, numCities)
-    delta=delta/N
-    t.updateTheta(delta)
-    print("theta: ", t.getTheta())
+    losses=updateGradient(t, gradient, tours, N, numCities)
+    plotLoss(losses, numCities)
 
 main()
