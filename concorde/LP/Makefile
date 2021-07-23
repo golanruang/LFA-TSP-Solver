@@ -21,11 +21,11 @@ CCINCDIR=$(SRCROOT)/INCLUDE
 srcdir = .
 
 CC = gcc
-CFLAGS = -g -O2  -I$(BLDROOT)/INCLUDE -I$(CCINCDIR) 
-LDFLAGS = -g -O2 
+CFLAGS = -g -O3 -arch x86_64  -I$(BLDROOT)/INCLUDE -I$(CCINCDIR) -Irhguang/Documents/SSI/TSP/concorde/QSOPT
+LDFLAGS = -g -O3 -arch x86_64 
 LIBS = -lm 
 RANLIB = ranlib
-LPSOLVER_INTERFACE = lpnone.c
+LPSOLVER_INTERFACE = lpqsopt.c
 
 OBJ_SUFFIX = o
 o = $(OBJ_SUFFIX)

@@ -22,8 +22,8 @@ BLDINCDIR=$(BLDROOT)/INCLUDE
 srcdir = .
 
 CC = gcc
-CFLAGS = -g -O2  -I$(BLDROOT)/INCLUDE -I$(CCINCDIR)
-LDFLAGS = -g -O2 
+CFLAGS = -g -O3 -arch x86_64  -I$(BLDROOT)/INCLUDE -I$(CCINCDIR)
+LDFLAGS = -g -O3 -arch x86_64 
 LIBFLAGS = -lm 
 RANLIB = ranlib
 

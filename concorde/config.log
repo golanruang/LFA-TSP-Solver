@@ -4,13 +4,13 @@ running configure, to aid debugging if configure makes a mistake.
 configure:593: checking host system type
 configure:619: checking for prespecified compiler options
 configure:716: checking for gcc
-configure:829: checking whether the C compiler (gcc  ) works
-configure:845: gcc -o conftest    conftest.c  1>&5
+configure:829: checking whether the C compiler (gcc -g -O3 -arch x86_64 ) works
+configure:845: gcc -o conftest -g -O3 -arch x86_64   conftest.c  1>&5
 configure:842:1: warning: type specifier missing, defaults to 'int' [-Wimplicit-int]
 main(){return(0);}
 ^
 1 warning generated.
-configure:871: checking whether the C compiler (gcc  ) is a cross-compiler
+configure:871: checking whether the C compiler (gcc -g -O3 -arch x86_64 ) is a cross-compiler
 configure:876: checking whether we are using GNU C
 configure:885: gcc -E conftest.c
 configure:904: checking whether gcc accepts -g
@@ -19,18 +19,18 @@ configure:965: checking for ranlib
 configure:997: checking for sh
 configure:1041: checking for file suffixes
 configure:1176: checking for sqrt in -lm
-configure:1195: gcc -o conftest -g -O2   conftest.c -lm   1>&5
+configure:1195: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm   1>&5
 configure:1188:6: warning: incompatible redeclaration of library function 'sqrt' [-Wincompatible-library-redeclaration]
 char sqrt();
      ^
 configure:1188:6: note: 'sqrt' is a builtin with type 'double (double)'
 1 warning generated.
 configure:1225: checking for -lnsl
-configure:1242: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:1242: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:1294: checking for -lsocket
-configure:1311: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:1311: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:1361: checking for bfd_open_file in -lbfd
-configure:1380: gcc -o conftest -g -O2   conftest.c -lbfd  -lm  1>&5
+configure:1380: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lbfd  -lm  1>&5
 ld: library not found for -lbfd
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure: failed program was:
@@ -45,7 +45,7 @@ int main() {
 bfd_open_file()
 ; return 0; }
 configure:1408: checking for xstrerror in -liberty
-configure:1427: gcc -o conftest -g -O2   conftest.c -liberty  -lm  1>&5
+configure:1427: gcc -o conftest -g -O3 -arch x86_64   conftest.c -liberty  -lm  1>&5
 ld: library not found for -liberty
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure: failed program was:
@@ -63,7 +63,7 @@ configure:1678: checking how to run the C preprocessor
 configure:1699: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1758: checking for ANSI C header files
 configure:1771: gcc -E  conftest.c >/dev/null 2>conftest.out
-configure:1838: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:1838: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:1833:67: error: implicitly declaring library function 'exit' with type 'void (int) __attribute__((noreturn))' [-Werror,-Wimplicit-function-declaration]
 if (XOR (islower (i), ISLOWER (i)) || toupper (i) != TOUPPER (i)) exit(2);
                                                                   ^
@@ -81,7 +81,7 @@ if (XOR (islower (i), ISLOWER (i)) || toupper (i) != TOUPPER (i)) exit(2);
 exit (0); }
 
 configure:1862: checking whether time.h and sys/time.h may both be included
-configure:1876: gcc -c -g -O2  conftest.c 1>&5
+configure:1876: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:1900: checking for stdlib.h
 configure:1910: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1900: checking for math.h
@@ -133,16 +133,16 @@ configure:1910: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1900: checking for sys/times.h
 configure:1910: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:2001: checking for working const
-configure:2055: gcc -c -g -O2  conftest.c 1>&5
+configure:2055: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2078: checking for void
-configure:2090: gcc -c -g -O2  conftest.c 1>&5
+configure:2090: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2111: checking for size_t
 configure:2144: checking for pid_t
 configure:2177: checking return type of signal handlers
-configure:2199: gcc -c -g -O2  conftest.c 1>&5
+configure:2199: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2218: checking for u_char
 configure:2254: checking for missing printf prototype
-configure:2266: gcc -c -g -O2  conftest.c 1>&5
+configure:2266: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2262:8: error: passing 'double' to parameter of incompatible type 'const char *'
 printf(3.0)
        ^~~
@@ -158,7 +158,7 @@ int main() {
 printf(3.0)
 ; return 0; }
 configure:2290: checking for missing gethostname prototype
-configure:2305: gcc -c -g -O2  conftest.c 1>&5
+configure:2305: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2301:16: error: too few arguments to function call, expected 2, have 1
 gethostname(3.0)
 ~~~~~~~~~~~    ^
@@ -177,7 +177,7 @@ int main() {
 gethostname(3.0)
 ; return 0; }
 configure:2329: checking for missing getrusage prototype
-configure:2356: gcc -c -g -O2  conftest.c 1>&5
+configure:2356: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2352:14: error: too few arguments to function call, expected 2, have 1
 getrusage(3.0)
 ~~~~~~~~~    ^
@@ -208,9 +208,9 @@ int main() {
 getrusage(3.0)
 ; return 0; }
 configure:2382: checking usable sigaction()
-configure:2404: gcc -c -g -O2  conftest.c 1>&5
+configure:2404: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2474: checking for __attribute__
-configure:2486: gcc -c -g -O2  conftest.c 1>&5
+configure:2486: gcc -c -g -O3 -arch x86_64  conftest.c 1>&5
 configure:2482:64: error: function definition is not allowed here
 int __attribute__ ((unused)) x (__attribute__ ((unused)) int y){return 0;}
                                                                ^
@@ -223,25 +223,25 @@ int main() {
 int __attribute__ ((unused)) x (__attribute__ ((unused)) int y){return 0;}
 ; return 0; }
 configure:2554: checking for gethostname
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2554: checking for socket
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2554: checking for strdup
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2566:6: warning: incompatible redeclaration of library function 'strdup' [-Wincompatible-library-redeclaration]
 char strdup();
      ^
 configure:2566:6: note: 'strdup' is a builtin with type 'char *(const char *)'
 1 warning generated.
 configure:2554: checking for getrusage
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2554: checking for times
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2554: checking for clock
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2554: checking for sleep
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2554: checking for sigaction
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
 configure:2554: checking for signal
-configure:2582: gcc -o conftest -g -O2   conftest.c -lm  1>&5
+configure:2582: gcc -o conftest -g -O3 -arch x86_64   conftest.c -lm  1>&5
