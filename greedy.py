@@ -6,8 +6,8 @@ import math
 import time
 
 import urllib.request
-# url = 'https://raw.githubusercontent.com/jinchenghao/TSP/master/data/TSP100cities.tsp'
-url = "https://raw.githubusercontent.com/Gurobi/modeling-examples/master/traveling_salesman/capitals.json"
+url = 'https://raw.githubusercontent.com/jinchenghao/TSP/master/data/TSP100cities.tsp'
+# url = "https://raw.githubusercontent.com/Gurobi/modeling-examples/master/traveling_salesman/capitals.json"
 data = urllib.request.urlopen(url)
 dataframe = pd.read_table(data,sep=" ",header=None)
 v = dataframe.iloc[:,1:3]
