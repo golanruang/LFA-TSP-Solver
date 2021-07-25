@@ -6,6 +6,7 @@ import math
 import time
 
 import urllib.request
+# url = 'https://raw.githubusercontent.com/jinchenghao/TSP/master/data/TSP100cities.tsp'
 url = 'https://raw.githubusercontent.com/jinchenghao/TSP/master/data/TSP100cities.tsp'
 # url = "https://raw.githubusercontent.com/Gurobi/modeling-examples/master/traveling_salesman/capitals.json"
 data = urllib.request.urlopen(url)
@@ -15,6 +16,7 @@ v = dataframe.iloc[:,1:3]
 train_v= np.array(v)
 train_d=train_v
 dist = np.zeros((train_v.shape[0],train_d.shape[0]))
+print("hi")
  
  #Calculate distance matrix
 for i in range(train_v.shape[0]):
