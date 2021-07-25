@@ -1,23 +1,26 @@
 from newtsp import TSP
 
 from random import randint
-import random
-import math
+# import random
+# import math
 
 import numpy as np
 from scipy.special import softmax
 
 import matplotlib.pyplot as plt
-import turtle
+# import turtle
 
-import os
+# import os
 
-import pandas as pd
-import descartes
-import geopandas as gpd
-from shapely.geometry import Point, Polygon
+# import pandas as pd
+# import descartes
+# import geopandas as gpd
+# from shapely.geometry import Point, Polygon
+
+import time
 
 def calculateSum(t, history, s):
+    start=time.time()
     numCities = t.getNumCities()
     theta=t.getTheta()
     sum = np.zeros(len(theta))
@@ -31,35 +34,42 @@ def calculateSum(t, history, s):
             for j in range(numCities):
                 Pphi = t.phi(history, s, str(j))
                 Pphis.append(Pphi)
-
+            # print("len Pphis: ", len(Pphis))
             distributions = t.getDistributions(Pphis)
+            # print("distributions: ", distributions)
             softmaxed = t.softmaxCities(history, distributions)
             p = softmaxed[i]
 
             toSum = np.multiply(p, phi)
             sum = np.add(sum, toSum)
+        Pphis=[]
+
+    # end=time.time()
+    # print("time taken in calculateSum(): %f" % (end-start))
     
     return sum
 
 def sampleTour(history, s, t):
+    # takes around 0.8 seconds
+    # start=time.time()
     phis = []
     numCities = t.getNumCities()
     t.setS(s)
     for i in range(numCities-1):
-
         for j in range(numCities):
             # print("j: %d " % j)
             phi = t.phi(history, s, str(j))
             phis.append(phi)
-
+        #print("phis: %s" % phis)
         distributions = t.getDistributions(phis)
         # print("distributions: ", distributions)
         softmaxed = t.softmaxCities(history, distributions)
         nextCity = t.sampleCities(softmaxed)
         phis = []
         history.append(str(nextCity))
-
-    history.append("0")
+    #history.append("0")                                         JUST CHANGED
+    # end=time.time()
+    # print("time taken in sampleTour(): %f" % (end-start))
     return history
 
     # print("history: ", history)
@@ -74,8 +84,7 @@ def logP(t, tour, s):
         currentCity = tour[i]
         nextCity = tour[i+1]
         phi = t.phi(history, s, nextCity)
-        sum = calculateSum(t, history, s)
-
+        sum = calculateSum(t, history, s)             # this function takes too much time
         history.append(nextCity)
         oneIter=np.subtract(phi, sum)
         logGradP=np.add(logGradP, oneIter)
@@ -83,9 +92,15 @@ def logP(t, tour, s):
     return logGradP
 
 def bigTerm(t, tour, s):
+    """
+    this function takes way too long - like 11-12 seconds
+    """
     loss = t.loss(tour, s)
     # print("loss: %f" % loss)
-    log_gradient_P = logP(t, tour, s)
+    start=time.time()
+    log_gradient_P = logP(t, tour, s)       # it's this function
+    end=time.time()
+    print("log time: %f" % (end-start))
 
     return np.multiply(loss, log_gradient_P), loss
 
@@ -103,16 +118,18 @@ def updateGradient(t, gradient, tours, N, numCities):
     gradient = np.zeros(len(theta))
     history = ["0"]
     losses=[]
-    k=4
+    k=3
     
-    # two loops - inner loop 
     for j in range(k):                          # update theta
         print("k: %d"%j)
         for i in range(N):                      # estimate gradient
             s=t.generateS(numCities)
             tour = sampleTour(history, s, t)
             #print("tour: %s" % tour)
+            start=time.time()
             term, loss = bigTerm(t, tour, s)
+            end=time.time()
+            print("big term time: %f" % (end-start))
             #print("big term: %s" % term)
             term = term/N
             gradient=np.add(gradient,term)
@@ -187,9 +204,11 @@ def solveTSP(N, numCities, stepsize, dimensions):
     
     initS = t.generateS(numCities)
     t.initTheta(t.phi(["0"], initS, "1"))
-    print(initS)
-
+    # print(initS)
+    start=time.time()
     losses=updateGradient(t, gradient, tours, N, numCities)
+    end=time.time()
+    print("updating gradient time: %f" % (end-start))
     avgLoss = sum(losses)/N
     print("avg loss: %f" % avgLoss)
     plotLoss(losses, numCities, dimensions)
@@ -202,7 +221,6 @@ def solveTSP(N, numCities, stepsize, dimensions):
         tour=sampleTour(history, s, t)
         loss=t.loss(tour, s)
         totalLoss+=loss
-        print(loss)
     print("avg loss: %f" % (totalLoss/sampleNum))
     # plotRoute(t, numCities,N, initS)
 
@@ -211,7 +229,7 @@ def solveTSP(N, numCities, stepsize, dimensions):
 def main():
     N = 3
     numCities = 50
-    stepsize = 0.05
+    stepsize = 2
     # dimensions = (30.266667,-123.029159)
     dimensions = (1,1)
     

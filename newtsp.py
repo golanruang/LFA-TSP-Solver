@@ -11,9 +11,7 @@ import turtle
 import os
 
 import pandas as pd
-import descartes
-import geopandas as gpd
-from shapely.geometry import Point, Polygon
+import time
 
 class TSP:
 
@@ -34,6 +32,7 @@ class TSP:
 
     def generateS(self, numCities):         # generate 1 s for every tour
         """generate s given num cities"""
+        start=time.time()
         cities = {}
         cityNum = 0
         xcoord = 0
@@ -47,29 +46,48 @@ class TSP:
                 xcoord = random.uniform(0,self.dimensions[0])
 
         self.s = cities 
+        end=time.time()
+        # print("time taken in generateS: %f" % (end-start))
         # print('cities: %s'% cities)
         return cities
 
-    def getDistributions(self,phis):
+    # def getDistributions(self,phis):
+    #     """
+    #     multiplies theta and phis together to get a value
+    #     """
+    #     # print("in getDistributions()")
+    #     # print("len phis in getDistributions(): %d" % len(phis))
+    #     start=time.time()
+    #     distributions = []
+    #     for phi in phis:
+    #         # print("phi: %s\nself.theta: %s" % (phis,self.theta))
+    #         phi = np.dot(phi, self.theta)
+    #         distributions.append(phi)
+        
+    #     # print("theta: ", self.theta)
+    #     # print("len distributions: ", len(distributions))
+    #     end=time.time()
+    #     print("time taken in TSP.getDistributions(): ", end-start)
+    #     return distributions                                 # 1 x numCities shaped array
+
+    def getDistributions(self, phis):
         """
         multiplies theta and phis together to get a value
         """
         # print("in getDistributions()")
         # print("len phis in getDistributions(): %d" % len(phis))
-        distributions = []
-        for phi in phis:
-            # print("phi: %s\nself.theta: %s" % (phis,self.theta))
-            phi = np.dot(phi, self.theta)
-            distributions.append(phi)
-        
-        # print("distributions: ", distributions)
-        return distributions                                 # 1 x numCities shaped array
+        #start=time.time()
+        distributions=[np.dot(phi,self.theta) for phi in phis]
+        #end=time.time()
+        #print("time taken in TSP.getDistributions(): ", end-start)
+        return distributions
 
     def softmaxCities(self, history, distributions):
         """
         set softmax as 0 if city is in history - take softmax of distribution and sample
         make sure this works
         """
+        #start=time.time()
         # print("len distributions %d" % len(distributions))
         toSoftmax = []
         for i in range(len(distributions)):         # for each city (i = city)
@@ -88,6 +106,8 @@ class TSP:
                 P.append(softmaxed[index])
                 index += 1
         # print("P: ", P)
+        #end=time.time()
+        #print("time taken in TSP.softmaxCities(): %f" % (end-start))
         return P
 
     def setTheta(self, theta):
@@ -101,15 +121,19 @@ class TSP:
         # print("sum: %f" % sum(softmaxes))
         # softmaxes=np.array(softmaxes)
         # softmaxes/=softmaxes.sum()
+        # start=time.time()
         softmaxes=np.array(softmaxes).astype("float64")
         nextCity=np.random.choice(range(self.numCities), p=softmaxes)
+        # end=time.time()
+        # print("time taken in TSP.sampleCities(): %f" % (end-start))
         return nextCity 
 
     def phi(self, history, s, nextCity):
-        # make 
+        # 
         """
         returns 1xnumCities vector of phis
         """
+        # sstart = time.time()
         phis = []
         currCityCoords = self.s[history[-1]]              # tuple of floats
         nextCityCoords = self.s[nextCity]                 # tuple of floats
@@ -117,11 +141,13 @@ class TSP:
         for i in range(self.numCities):   
             dist1 = self.distance(currCityCoords, nextCityCoords)
             dist2 = self.distance(currCityCoords, self.s[str(i)])
-            # print("dist 1: %f, dist 2: %f" % (dist1, dist2))
+            # print("dist 1: %.2f, dist 2: %.2f" % (dist1, dist2))
             phis.append(dist1+dist2)
 
         # print("phis: ", phis)
         # print("len phis in phi(): %s" % len(phis))
+        # end = time.time()
+        # print("time taken in TSP.phi(): %f" % (end-start))
         return phis
 
     # def phi(self, history, s, nextCity):
