@@ -7,10 +7,10 @@ import time
 import matplotlib.pyplot as plt
 
 import urllib.request
+# 10, 25, 50, 100
+numCities = 75
 # url = 'https://raw.githubusercontent.com/jinchenghao/TSP/master/data/TSP100cities.tsp'
-# url = 'https://raw.githubusercontent.com/golanruang/TSP/main/TSP50cities.tsp.txt'
-url = "https://raw.githubusercontent.com/golanruang/TSP/main/TSP10cities.tsp.txt"
-# url = "https://raw.githubusercontent.com/golanruang/TSP/main/TSP25cities.tsp.txt"
+url = 'https://raw.githubusercontent.com/golanruang/TSP/main/TSP%scities.tsp.txt' % numCities
 # url = "https://raw.githubusercontent.com/Gurobi/modeling-examples/master/traveling_salesman/capitals.json"
 data = urllib.request.urlopen(url)
 dataframe = pd.read_table(data,sep=" ",header=None)
@@ -19,8 +19,7 @@ v = dataframe.iloc[:,1:3]
 train_v= np.array(v)
 train_d=train_v
 dist = np.zeros((train_v.shape[0],train_d.shape[0]))
-print("hi")
- 
+
  #Calculate distance matrix
 for i in range(train_v.shape[0]):
     for j in range(train_d.shape[0]):
@@ -83,5 +82,5 @@ for i in range(len(tour)-1):
     y_values = [firstCity[1], secondCity[1]]
     plt.plot(x_values, y_values)
 
-plt.title("Greedy Solver for %d cities" % 50)
+plt.title("Greedy Solver for %d cities" % numCities)
 plt.show()
